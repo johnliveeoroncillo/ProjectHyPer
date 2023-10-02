@@ -5,12 +5,25 @@
 
     <nav>
         <ul class="flex flex-row gap-2 font-medium">
-            <li>
-                <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="login">Login</a>
-            </li>
-            <li>
-                <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="register">Register</a>
-            </li>
+            <?php
+                if (empty(session())) { ;?>
+                <li>
+                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="login">Login</a>
+                </li>
+                <li>
+                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="register">Register</a>
+                </li>
+            <?php } else { ;?>
+                <li>
+                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="api/logout">Write</a>
+                </li>
+                <li>
+                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="api/logout">History</a>
+                </li>
+                <li>
+                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="api/logout">Profile</a>
+                </li>
+            <?php } ;?>
         </ul>
     </nav>
 </header>

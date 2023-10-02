@@ -69,7 +69,7 @@ function uuid() {
 
 function set_flash_message($message = '', $error = true) {
 	$class = $error ? 'danger' : 'success';
-	$_SESSION['message'] = "<div class='".$class." px-4 py-3 rounded text-white mb-4 font-semibold !text-lg'>".$message."</div>";
+	$_SESSION['message'] = "<div class='".$class." px-4 py-3 rounded-lg text-sm text-white mb-2 font-semibold'>".$message."</div>";
 }
 
 function flash_message() {
