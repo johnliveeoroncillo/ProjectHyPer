@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+    font-family: 'Poppins', sans-serif !important;
+    color: #202020;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+* {
+    transition: all 200ms ease-in-out;
+    outline: none;
+}
+
+@keyframes bounce-right {
+    0%, 100% {
+      transform: translateX(-25%);
+      animationTimingFunction: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(0);
+      animationTimingFunction: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+#bg {
+  background-image: url('../img/cover.png');
+  @apply bg-no-repeat;
+  @apply bg-center;
+}
+
+.content a {
+   display: inline-block;
+}
+
+.link-active {
+   @apply bg-gray-200;
+   @apply text-gray-900;
+}
+
+.report-active {
+   @apply bg-blue-800;
+   @apply text-white;
+}
+
+.danger {
+   @apply bg-red-600;
+}
+
+.success {
+   @apply bg-green-600;
+}
+
+.info {
+   @apply bg-blue-600;
+}
+
+.warning {
+   @apply bg-yellow-600;
+}
+
+.disabled {
+   
+}
+
+button:disabled {
+   @apply bg-gray-200;
+   @apply text-gray-500;
+   @apply cursor-not-allowed;
+   @apply hover:bg-gray-200;
+   @apply hover:text-gray-500;
+}

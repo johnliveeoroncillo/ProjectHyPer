@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+    font-family: 'Poppins', sans-serif !important;
+    color: #202020;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+* {
+    transition: all 200ms ease-in-out;
+    outline: none;
+}
+
+@keyframes bounce-right {
+    0%, 100% {
+      transform: translateX(-25%);
+      animationTimingFunction: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(0);
+      animationTimingFunction: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+#bg {
+  background-image: url('../img/cover.png');
+}
