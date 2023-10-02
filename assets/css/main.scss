@@ -31,8 +31,8 @@ html, body {
 }
 
 .link-active {
-   @apply bg-gray-200;
-   @apply text-gray-900;
+   @apply bg-blue-600;
+   @apply text-white;
 }
 
 .report-active {
@@ -66,4 +66,9 @@ button:disabled {
    @apply cursor-not-allowed;
    @apply hover:bg-gray-200;
    @apply hover:text-gray-500;
+}
+
+input {
+   outline: none !important;
+   box-shadow: none !important;
 }

@@ -5,11 +5,11 @@
 
     <nav>
         <ul class="flex flex-row gap-2 font-medium">
-            <li class="rounded hover:bg-blue-600 hover:text-white py-1 px-4">
-                <a href="login">Login</a>
+            <li>
+                <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="login">Login</a>
             </li>
-            <li class="rounded hover:bg-blue-600 hover:text-white py-1 px-4">
-                <a href="register">Register</a>
+            <li>
+                <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="register">Register</a>
             </li>
         </ul>
     </nav>

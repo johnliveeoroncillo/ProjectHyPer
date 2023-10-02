@@ -41,5 +41,6 @@
 	}
 	$php_file = strtolower($requestString);
 	$render = new Render();
+
 	$render->load_page($php_file);
 ?>
