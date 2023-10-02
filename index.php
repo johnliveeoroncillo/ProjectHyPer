@@ -3,7 +3,7 @@
 	date_default_timezone_set('Asia/Manila');
 	include('./config/constant.php');
 	include('./core/render.php');
-	include('./core/database.php');
+	// include('./core/database.php');
 	include('./core/utils.php');
 	include('./core/guard.php');
 
@@ -15,13 +15,13 @@
 	define('uri_string', $requestString);
 
 	//IMPORT CORE DEPENDENCIES
-	$db = new Database();
-	$db->connect();
+	// $db = new Database();
+	// $db->connect();
 
 	$guard = new Guard();
 
 	//IMPORT GLOBAL
-	add_global('db', $db);
+	// add_global('db', $db);
 	add_global('guard', $guard);
 	
 	$urlParams = explode('/', $requestString);

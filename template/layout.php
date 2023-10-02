@@ -1,7 +1,3 @@
-<?php
-    $global_settings = $db->get_where_row('settings');
-    $vol = (!empty($global_settings) ? $global_settings['volume'] : 0);
-;?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -26,10 +22,7 @@
     
           
     <script src="assets/js/jquery-3.6.1.min.js"></script>
-    <script src="assets/js/html2canvas.hertzen.com_dist_html2canvas.min.js"></script>
-    <script src="assets/js/js.pusher.com_8.2.0_pusher.min.js"></script>
-    <script src="assets/js/websockets.js"></script>
-<script>
+    <script>
           const modalGet = '<?=(!empty($_GET['modal']) ? $_GET['modal'] : '');?>';
           const modalUrl = '<?=(!empty($_GET['url']) ? $_GET['url'] : '');?>';
           if (modalGet !== '') setTimeout(() => { showModal(modalGet, modalUrl) }, 300);
@@ -42,9 +35,6 @@
           }
           function hideModal(modal = '') {
               $('#'+modal).removeAttr('style');
-          }
-          function deleteData(table, id) {
-              window.location.href = "api/admin/delete-data?table="+table+"&id=" + id;
           }
           function removeQs() {
               // const params = new URLSearchParams(window.location.search);
@@ -61,19 +51,9 @@
   </head>
   <body class="flex flex-col" id="bg">
       <?=(!empty($data['header']) ? $data['header'] : '');?>
-      <div class="flex-1 relative overflow-hidden content">
-            <div class="absolute top-0 left-0 w-full h-full overflow-auto py-4" id="container">
-                <?=(!empty($data['content']) ? $data['content'] : '');?>
-            </div>
-      </div>
+      <?=(!empty($data['content']) ? $data['content'] : '');?>
       <!-- <?=(!empty($data['footer']) ? $data['footer'] : '');?> -->
 
-
-      <audio id="sound" autostart="0" style="display: none;">
-         <source src="assets/effect.mp3" type="audio/mpeg">
-      </audio>
-      <button id="play" class="hidden">Play</button>
-      <button id="play1" class="text-black" style="display: none;">Play</button>
       <?php
         $modal = glob('./**/*-modal.php');
         if (!empty($modal)) {
@@ -82,10 +62,6 @@
             }
         }
       ;?>
-      <script src="assets/js/speech.js"></script>
-      <script>
-            speech.volume = <?=$vol;?>;
-      </script>
       <script>
         $(document).ready(function() {
             $('.dropdown').on('click', function() {
@@ -103,29 +79,6 @@
                 checkWidth();
             });
 
-            function checkWidth() {
-                const width = $(window).width();
-                if (width < 1024) {
-                    $('#dynamic-header').addClass('hidden');
-                    $('#dynamic-header').removeClass('flex');
-                } else {
-                    $('#dynamic-header').removeClass('hidden');
-                    $('#dynamic-header').addClass('flex');
-                }
-            }
-
-            $('#open').on('click', function() {
-                $('#dynamic-header').removeClass('hidden');
-                $('#dynamic-header').addClass('flex');
-            });
-
-            $('#close').on('click', function() {
-                $('#dynamic-header').addClass('hidden');
-                $('#dynamic-header').removeClass('flex');
-            });
-
-            checkWidth();
-
             const url = window.location;
             const fullUrl = url.href;
             const path = url.pathname;
@@ -134,30 +87,10 @@
             split.shift(); // remove empty
             split.shift(); // remove folder
             const newPath = split.join('/');
-            $('a[href]').each((element, obj) => {
+            $('a[href]:not(.no-active)').each((element, obj) => {
                 if (newPath === $(obj).attr('href')) {
                     $(obj).addClass('link-active');
                 }
-            });
-            
-            $('#play').on('click', function() {
-                var audio = document.getElementById('sound');
-                audio.play();
-            });
-
-            var audio = document.getElementById('sound');
-            audio.volume = <?=$vol;?>/100;
-            console.log(audio.volume);
-
-            $('#second-monitor').on('click', function() {
-                const w = $(window).width();
-                const h = $(window).height();
-                console.log(w, h);
-                var NWin = window.open('<?=BASE_URL;?>second-monitor', '', 'height=' + h + 'px','width=' + w + 'px');
-                if (window.focus) {
-                    NWin.focus();
-                }
-                return false;
             });
         });
       </script>

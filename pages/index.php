@@ -1,8 +1,15 @@
-<div class="flex-1 w-full h-full grid place-items-center bg-cover bg-center relative">
-    <img src="assets/img/cas.png" class="absolute left-1/2 -translate-x-1/2 w-[500px]" />
-    <div class="flex flex-col gap-4 text-4xl relative z-10">
-        <a href="admin" class="text-center bg-opacity-90 hover:bg-blue-700 shadow w-full rounded-full py-6 px-10 font-medium text-white bg-blue-600">Administrator</a>
-        <a href="student" class="text-center bg-opacity-90 hover:bg-blue-700 shadow w-full rounded-full py-6 px-10 font-medium text-white bg-blue-600">Student</a>
-        <a href="api/login-guest" class="text-center bg-opacity-90 hover:bg-blue-700 shadow w-full rounded-full py-6 px-10 font-medium text-white bg-blue-600">Guest</a>
+<div class="flex-1 w-full h-full flex flex-row gap-10 bg-gray-50">
+    <div class="flex-1 grid place-items-center">
+        <div class="max-w-lg">
+            <h1 class="text-4xl font-semibold mb-4">Write with confidence</h1>
+            <p>With <?=APP_NAME;?>, the AI-powered writing assistant, correct your texts, improve your style and boost your creativity.</p> 
+
+            <button class="rounded py-2 px-4 bg-blue-600 text-white font-bold mt-5 hover:bg-blue-800">
+                Get Started
+            </button>
+        </div>
+    </div>
+    <div class="flex-1 grid place-items-center">
+        <img src="assets/img/illustration.webp" class="max-w-lg" />
     </div>
 </div>

@@ -26,12 +26,6 @@ html, body {
     }
 }
 
-#bg {
-  background-image: url('../img/cover.png');
-  @apply bg-no-repeat;
-  @apply bg-center;
-}
-
 .content a {
    display: inline-block;
 }

@@ -1,10 +1,16 @@
-<div class="bg-blue-700 bg-opacity-60 p-4 top-0 w-full left-0 px-10 z-10 h-[200px] lg:h-[155px] grid place-items-center">
-    <a href="<?=BASE_URL;?>" class="absolute top-5 left-1/2 -translate-x-1/2 lg:left-10 lg:translate-x-0">
-        <img src="assets/img/psu.png" class="w-[120px]">
+<header class="flex flex-row justify-between items-center px-4 py-1 shadow">
+    <a class="logo no-active" href="">
+        <img src="assets/img/logo.png" class="h-[50px]" />
     </a>
 
-    <div class="flex-1 text-center text-white mt-[120px] lg:mt-0">
-        <h1 class="font-bold text-lg lg:text-4xl">CAS Queueing System</h1>
-        <h1 class="font-medium text-md lg:text-xl mt-0 lg:mt-2">Partido State University</h1>
-    </div>
-</div>
+    <nav>
+        <ul class="flex flex-row gap-2 font-medium">
+            <li class="rounded hover:bg-blue-600 hover:text-white py-1 px-4">
+                <a href="login">Login</a>
+            </li>
+            <li class="rounded hover:bg-blue-600 hover:text-white py-1 px-4">
+                <a href="register">Register</a>
+            </li>
+        </ul>
+    </nav>
+</header>
