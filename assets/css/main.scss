@@ -72,3 +72,40 @@ input {
    outline: none !important;
    box-shadow: none !important;
 }
+
+.loading {
+   position: relative;
+   overflow: hidden;
+   @apply bg-gray-300;
+   @apply text-gray-300;
+   cursor: not-allowed;
+   pointer-events: none;
+
+   &::before {
+      content: '';
+      width: 24px;
+      position: absolute;
+      left: 45%;
+      transform: translateX(-50%);
+      border-radius: 100%;
+      border: 2px solid black;
+      border-top: 0 !important;
+      @apply border-blue-600;
+      height: 24px;
+      
+      animation: spin 500ms infinite linear;
+   }
+}
+
+@-moz-keyframes spin {
+   from { -moz-transform: rotate(0deg); }
+   to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+   from { -webkit-transform: rotate(0deg); }
+   to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+   from {transform:rotate(0deg);}
+   to {transform:rotate(360deg);}
+}

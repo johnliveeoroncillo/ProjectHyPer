@@ -22,6 +22,7 @@
     
           
     <script src="assets/js/jquery-3.6.1.min.js"></script>
+    <script src="assets/js/script.js"></script>
     <script>
           const modalGet = '<?=(!empty($_GET['modal']) ? $_GET['modal'] : '');?>';
           const modalUrl = '<?=(!empty($_GET['url']) ? $_GET['url'] : '');?>';
@@ -73,10 +74,6 @@
             $('select[name][value]').each(function(e, obj) {
                 const value = $(obj).attr('value');
                 $(obj).val(value);
-            });
-
-            $(window).on('resize', function() {
-                checkWidth();
             });
 
             const url = window.location;

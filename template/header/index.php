@@ -15,7 +15,7 @@
                 </li>
             <?php } else { ;?>
                 <li>
-                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="api/logout">Write</a>
+                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="write">Write</a>
                 </li>
                 <li>
                     <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="api/logout">History</a>
