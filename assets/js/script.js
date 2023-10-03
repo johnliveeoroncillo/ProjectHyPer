@@ -3,6 +3,7 @@ const categories = {
     TYPOS: 'bg-red-600',
     CASING: 'bg-blue-600',
     PUNCTUATION: 'bg-yellow-600',
+    MISC: 'bg-yellow-600',
 }
 
 function buildUrl() {
