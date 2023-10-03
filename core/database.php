@@ -269,4 +269,8 @@ class Database {
 	function last_query() {
 		return $this->query_string;
 	}
+
+	function lastInsertedId() {
+		return $this->db->lastInsertId();
+	}
 }

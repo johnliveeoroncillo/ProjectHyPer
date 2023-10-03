@@ -18,10 +18,10 @@
                     <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="write">Write</a>
                 </li>
                 <li>
-                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="api/logout">History</a>
+                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="history">History</a>
                 </li>
                 <li>
-                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="api/logout">Profile</a>
+                    <a class="rounded hover:bg-blue-600 hover:text-white py-1 px-4" href="profile">Profile</a>
                 </li>
             <?php } ;?>
         </ul>

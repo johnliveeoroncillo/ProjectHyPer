@@ -67,12 +67,12 @@ function parseData(payload) {
     if (matches.length > 0) {
         for (let i = 0; i < matches.length; i += 1) {
             const match = matches[i];
-            const { rule, length, offset, replacements, shortMessage } = match;
+            const { rule, length, offset, replacements, shortMessage, message } = match;
             const { category } = rule;
 
             addToList({
                 errorType: category.id,
-                errorMessage: shortMessage,
+                errorMessage: shortMessage || message,
                 text: replacements.length === 1 ? replacements[0] : replacements,
                 length,
                 offset
@@ -92,8 +92,14 @@ async function checkGrammar(string) {
         data: {
             language: 'en-US',
             tokenV2: '1c454d4c6846ffe3e0abee071d89f834',
+            textSessionId: 'user:2056483',
             username: 'johnliveeoroncillo@gmail.com',
             data: JSON.stringify({text:string}),
+            enableHiddenRules: true,
+            level: 'picky',
+            abtest: 'qb',
+            mode: 'allButTextLevelOnly',
+            allowIncompleteResults: true,
         },
         success(data) {
             parseData(data);
@@ -113,7 +119,7 @@ function replaceWords(payload) {
     const split = value.split('');
     split.splice(payload.offset, payload.length, payload.text.value);
 
-    writeArea.val(split.join(''));
+    writeArea.val(split.join('')).change();
 }
 
 function applyHighlights(matches) {
