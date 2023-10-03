@@ -22,7 +22,13 @@
     
           
     <script src="assets/js/jquery-3.6.1.min.js"></script>
-    <script src="assets/js/script.js"></script>
+
+    <?php
+      if (IS_DEVELOP) { ;?>
+        <script src="assets/js/script.raw.js"></script>
+    <?php } else { ;?>
+        <script src="assets/js/script.js"></script>
+    <?php } ;?>
     <script>
           const modalGet = '<?=(!empty($_GET['modal']) ? $_GET['modal'] : '');?>';
           const modalUrl = '<?=(!empty($_GET['url']) ? $_GET['url'] : '');?>';
