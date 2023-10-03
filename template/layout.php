@@ -91,9 +91,10 @@
             split.shift(); // remove folder
             let newPath = split.join('/');
             $('a[href]:not(.no-active)').each((element, obj) => {
+              console.log(newPath);
                 newPath = newPath.split('/');
                 newPath = newPath.shift();
-                if ($(obj).attr('href').includes(newPath)) {
+                if (newPath !== '' && $(obj).attr('href').includes(newPath)) {
                     $(obj).addClass('link-active');
                 }
             });
