@@ -109,3 +109,24 @@ input {
    from {transform:rotate(0deg);}
    to {transform:rotate(360deg);}
 }
+
+.backdrop {
+   position: absolute;
+   z-index: 1;
+   overflow: auto;
+   pointer-events: none;
+   transition: transform 1s;
+ }
+ 
+ .highlights {
+   word-wrap: break-word;
+   color: transparent;
+   margin-left: 1px;
+   // margin-top: -1px;
+ }
+
+ mark {
+   border-radius: 3px;
+   color: transparent;
+   background-color: #b1d5e5;
+ }

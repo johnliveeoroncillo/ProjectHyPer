@@ -4,6 +4,7 @@ const categories = {
     CASING: 'bg-blue-600',
     PUNCTUATION: 'bg-yellow-600',
     MISC: 'bg-yellow-600',
+    TYPOGRAPHY: 'bg-yellow-600',
 }
 
 function buildUrl() {
@@ -13,6 +14,8 @@ function buildUrl() {
 function parseErrorMessage(type, message) {
     if (type === "CASING") {
         return "Capitalize the first word";
+    } else if (type === "TYPOGRAPHY") {
+        return "Two consecutive spaces";
     }
 
     return message;
@@ -23,7 +26,7 @@ function addToList(payload) {
 
     const errorMessage = parseErrorMessage(payload.errorType, payload.errorMessage);
     container.append(`
-        <li class="correction-words border rounded-full px-2 py-1 flex flex-row gap-2 items-center hover:bg-gray-100 cursor-pointer" data-json='${JSON.stringify(payload)}'>
+        <li class="correction-words border rounded-full px-2 py-1 flex flex-row gap-2 items-center hover:bg-gray-100 cursor-pointer" data-json='${JSON.stringify(payload).replace(/\'/g, "&apos;")}'>
             <span class="w-3 h-3 rounded-full ${categories[payload.errorType]}"></span>
             <span>${payload.text.value}</span>
             <span class="text-xs">${errorMessage}</span>
@@ -62,10 +65,13 @@ function parseData(payload) {
                 offset
             })
         }
+
+        applyHighlights(matches);
     }
 }
 
 async function checkGrammar(string) {
+    resetHighlights();
     await $.ajax({
         url: buildUrl(),
         type: 'post',
@@ -91,13 +97,50 @@ function replaceWords(payload) {
 
     //{errortype":"casing","errormessage":"","text":{"value":"how"},"length":3,"offset":0}"
     const value = writeArea.val().trim();
-    console.log(value, payload.text.value);
     const split = value.split('');
-    console.log(split);
     split.splice(payload.offset, payload.length, payload.text.value);
-    console.log(split);
 
     writeArea.val(split.join(''));
+}
+
+function applyHighlights(matches) {
+    const hl = $('.highlights');
+    const writeArea = $('#write-area');
+    const value = writeArea.val().trim();
+
+    const highlights = value;
+    const hSplit = highlights.split('');
+
+    if (matches.length > 0) {
+        for (let i = 0; i < matches.length; i += 1) {
+            const match = matches[i];
+            const { rule, length, offset, replacements, shortMessage } = match;
+            const { category } = rule;
+            const added = i === 0 ? 0 : 2;
+            console.log(hSplit, value.split(''), value, value.slice(offset, length), offset, length);
+            hSplit.splice(offset + added, length, ...[`<mark class="${categories[category.id]}">`, ...value.slice(offset, offset + length).split(''), '</mark>']);
+        }
+    }
+
+    hl.html(hSplit.join(''));
+}
+
+function resetHighlights() {
+    const hl = $('.highlights');
+    const writeArea = $('#write-area');
+    const value = writeArea.val().trim();
+
+    hl.html(value);
+}
+
+function handleScroll() {
+    var scrollTop = $('#write-area').scrollTop();
+    $('.backdrop').scrollTop(scrollTop);
+}
+
+function handleInput() {
+    var text = $('#write-area').val();
+    $('.highlights').html(text);
 }
 
 $(document).ready(function() {
@@ -126,4 +169,9 @@ $(document).ready(function() {
         const length = $(this).val().length;
         $('#length-container').html(length);
     }); 
+
+    $(writeArea).on({
+        'input': handleInput,
+        'scroll': handleScroll
+    });
 });

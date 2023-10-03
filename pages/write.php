@@ -5,11 +5,11 @@ $guard->add(true);
 
 <div class="w-full h-full relative flex flex-col md:flex-row overflow-hidden">
     <div class="flex-1 flex flex-col overflow-hidden">
-        <div class="flex-1">
-            <div class="backdrop">
+        <div class="flex-1 relative">
+            <div class="backdrop p-8 w-full">
                 <div class="highlights"></div>
             </div>
-            <textarea class="resize-none p-8 bg-transparent w-full h-full" placeholder="Enter or paste your text here ..." id="write-area"></textarea>
+            <textarea class="resize-none p-8 bg-transparent w-full h-full z-10 relative" placeholder="Enter or paste your text here ..." id="write-area"></textarea>
         </div>
         <div class="border-b flex flex-row gap-4 justify-between items-center px-4 py-2">
             <div>
