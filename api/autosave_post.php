@@ -12,7 +12,7 @@ if (empty($id)) {
         'text' => $content
     ));
     $id = $db->lastInsertedId();
-    echo $id; die();
+    echo $id;
 } else {
     $db->update('user_contents', array(
         'name' => $name,
@@ -23,5 +23,13 @@ if (empty($id)) {
     ));
     echo $id;
 }
+
+$db->insert('user_content_histories', array(
+    'transaction_id' => $id,
+    'user_id' => session('id'),
+    'name' => $name,
+    'text' => $content,
+));
+
 
 ;?>

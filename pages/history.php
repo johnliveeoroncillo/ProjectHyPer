@@ -1,3 +1,0 @@
-<?php
-    $guard->add(true);
-;?>
