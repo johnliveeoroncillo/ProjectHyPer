@@ -781,6 +781,10 @@ video {
   align-items: center;
 }
 
+.justify-end {
+  justify-content: flex-end;
+}
+
 .justify-center {
   justify-content: center;
 }
@@ -1286,6 +1290,10 @@ input {
 
   .md\:w-\[40vw\] {
     width: 40vw;
+  }
+
+  .md\:flex-none {
+    flex: none;
   }
 
   .md\:flex-row {

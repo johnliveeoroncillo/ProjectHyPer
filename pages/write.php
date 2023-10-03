@@ -11,7 +11,7 @@ $guard->add(true);
             </div>
             <textarea class="resize-none p-8 bg-transparent w-full h-full" placeholder="Enter or paste your text here ..." id="write-area"></textarea>
         </div>
-        <div class="border-b flex flex-row gap-4 items-center px-4 py-2">
+        <div class="border-b flex flex-row gap-4 justify-between items-center px-4 py-2">
             <div>
                 <span class="font-bold" id="length-container">0</span> 
                 characters
@@ -20,7 +20,7 @@ $guard->add(true);
             <button class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-800" id="check-grammar">Check Grammar</button>
         </div>
     </div>
-    <div class="border-l flex-1 md:flex-0 md:w-[40vw] relative overflow-hidden">
+    <div class="border-l flex-1 md:flex-none md:w-[40vw] relative overflow-hidden">
         <div class="absolute w-full h-full overflow-auto p-4">
             <h1 class="font-bold mb-4">Corrections</h1>
 
