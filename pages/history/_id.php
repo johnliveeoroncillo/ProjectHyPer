@@ -24,9 +24,9 @@
             <ul class="flex flex-col gap-2">
                 <?php
                     foreach($histories as $history) {;?>
-                        <li class="border rounded-lg py-2 px-4 flex flex-row justify-between items-center">
+                        <li class="border rounded-lg py-2 px-4 flex flex-row justify-between gap-4 items-start">
                             <span class="text-sm"><?=$history['text'];?></span>
-                            <span class="text-xs"><?=date('M d, Y h:i:s  A', strtotime($history['created_at']));?></span>
+                            <span class="text-xs whitespace-nowrap"><?=date('M d, Y h:i:s  A', strtotime($history['created_at']));?></span>
                         </li>
                 <?php } ;?>
             </ul>
