@@ -9,7 +9,7 @@
 
             <?php
                 foreach ($contents as $content) { ;?>
-                    <a href="history/<?=$content['id'];?>" class="border shadow-sm p-4 rounded-lg cursor-pointer hover:bg-blue-50">
+                    <a href="history/<?=$content['id'];?>" class="border shadow-sm p-4 rounded-lg cursor-pointer hover:bg-blue-50 no-active">
                         <p class="line-clamp-3 h-[64px] text-sm"><?=$content['text'];?></p>
                         <p class="font-semibold text-sm mt-2 truncate"><?=$content['name'];?></p>
                     </a>
