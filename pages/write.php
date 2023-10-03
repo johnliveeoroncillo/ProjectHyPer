@@ -5,6 +5,9 @@ $guard->add(true);
 
 <div class="w-full h-full relative flex flex-col md:flex-row overflow-hidden">
     <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="w-full border-b">
+            <input type="text" value="Untitled - <?=date('Y-m-d h:i A');?>" class="block w-full bg-transparent px-8 py-2 text-gray-500" />
+        </div>
         <div class="flex-1 relative">
             <div class="backdrop p-8 w-full">
                 <div class="highlights"></div>

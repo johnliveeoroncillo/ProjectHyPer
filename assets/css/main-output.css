@@ -911,6 +911,10 @@ video {
   padding: 0.375rem;
 }
 
+.p-2 {
+  padding: 0.5rem;
+}
+
 .p-4 {
   padding: 1rem;
 }
@@ -974,6 +978,11 @@ video {
   padding-bottom: 2rem;
 }
 
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
@@ -1024,6 +1033,11 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 .placeholder-slate-400::-moz-placeholder {
@@ -1165,13 +1179,13 @@ input {
     border-radius: 100%;
     border: 2px solid black;
     border-top: 0 !important;
+    height: 24px;
   }
   &::before {
     --tw-border-opacity: 1;
     border-color: rgb(37 99 235 / var(--tw-border-opacity));
   }
   &::before {
-    height: 24px;
     animation: spin 500ms infinite linear;
   }
 }
@@ -1197,8 +1211,7 @@ input {
 .highlights {
   word-wrap: break-word;
   color: transparent;
-  margin-left: -1px;
-  margin-top: -1px;
+  margin-left: 1px;
 }
 
 mark {

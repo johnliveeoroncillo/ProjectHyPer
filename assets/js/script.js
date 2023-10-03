@@ -25,13 +25,26 @@ function addToList(payload) {
     const container = $('#correction-container');
 
     const errorMessage = parseErrorMessage(payload.errorType, payload.errorMessage);
-    container.append(`
-        <li class="correction-words border rounded-full px-2 py-1 flex flex-row gap-2 items-center hover:bg-gray-100 cursor-pointer" data-json='${JSON.stringify(payload).replace(/\'/g, "&apos;")}'>
-            <span class="w-3 h-3 rounded-full ${categories[payload.errorType]}"></span>
-            <span>${payload.text.value}</span>
-            <span class="text-xs">${errorMessage}</span>
-        </li>
-    `);
+    if (Array.isArray(payload.text)) {
+        for (let i = 0; i < payload.text.length; i += 1) {
+            const text = payload.text[i];
+            container.append(`
+                <li class="correction-words border rounded-full px-2 py-1 flex flex-row gap-2 items-center hover:bg-gray-100 cursor-pointer" data-json='${JSON.stringify({ ...payload, text: { value: text.value }}).replace(/\'/g, "&apos;")}'>
+                    <span class="w-3 h-3 rounded-full ${categories[payload.errorType]}"></span>
+                    <span>${text.value}</span>
+                    <span class="text-xs">${errorMessage}</span>
+                </li>
+            `);
+        }
+    } else {
+        container.append(`
+            <li class="correction-words border rounded-full px-2 py-1 flex flex-row gap-2 items-center hover:bg-gray-100 cursor-pointer" data-json='${JSON.stringify(payload).replace(/\'/g, "&apos;")}'>
+                <span class="w-3 h-3 rounded-full ${categories[payload.errorType]}"></span>
+                <span>${payload.text.value}</span>
+                <span class="text-xs">${errorMessage}</span>
+            </li>
+        `);
+    }
 }
 
 function clearList() {
@@ -60,7 +73,7 @@ function parseData(payload) {
             addToList({
                 errorType: category.id,
                 errorMessage: shortMessage,
-                text: replacements[0],
+                text: replacements.length === 1 ? replacements[0] : replacements,
                 length,
                 offset
             })
@@ -117,7 +130,7 @@ function applyHighlights(matches) {
             const { rule, length, offset, replacements, shortMessage } = match;
             const { category } = rule;
             const added = i === 0 ? 0 : 2;
-            console.log(hSplit, value.split(''), value, value.slice(offset, length), offset, length);
+            // console.log(hSplit, value.split(''), value, value.slice(offset, length), offset, length);
             hSplit.splice(offset + added, length, ...[`<mark class="${categories[category.id]}">`, ...value.slice(offset, offset + length).split(''), '</mark>']);
         }
     }
