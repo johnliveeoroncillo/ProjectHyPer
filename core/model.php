@@ -1,43 +1,22 @@
 <?php
-include('model.php');
 
-class Database {
-	var $db;
+class Model {
 	var $error;
+    private $db;
 	protected $query_string;
 	protected $query_order;
 	protected $dbprefix;
 
-	public function __construct() {
-		// $this->connect();
-		$this->dbprefix = DB_PREFIX;
+    public function __construct($name, $db) {
+		$this->table = $name;
+        $this->db = $db;
 	}
 
-	function connect() {
-		$hostname = DB_HOST;
-		$dbname = DB_NAME;
-		$username = DB_USERNAME;
-		$password = DB_PASSWORD;
-
-		$options = array(PDO::ATTR_PERSISTENT => true);
-		if (!IS_DEVELOP) {
-			$options = array(
-				PDO::MYSQL_ATTR_SSL_KEY    => getcwd() . '/certs/client-key.pem',
-				PDO::MYSQL_ATTR_SSL_CERT=> getcwd() . '/certs/client-cert.pem',
-				PDO::MYSQL_ATTR_SSL_CA    => getcwd() . '/certs/server-ca.pem',
-				PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
-			);
-		}
-		$db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password, $options);
-		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$this->db = $db;
-	}
-
-	function parse_table($table) {
+    function parse_table($table) {
 		return $this->dbprefix.$table;
 	}
 
-	function get_where($table = '', $where = array()) {
+	function get_where($where = array()) {
 		$data = array();
 
 		if(!empty($where) && is_array($where)) {
@@ -48,7 +27,7 @@ class Database {
 		}
 
 		$where_condition = (is_array($where) ? (!empty($temp) ? "WHERE ".implode(' and ', $temp) : '') : (empty($where) ? '' : "WHERE ".$where));
-		$this->query_string = "SELECT * FROM {$this->parse_table($table)} {$where_condition} {$this->query_order}";
+		$this->query_string = "SELECT * FROM {$this->parse_table($this->table)} {$where_condition} {$this->query_order}";
 
 		try {
 	    	$query = $this->db->query($this->query_string);
@@ -67,8 +46,8 @@ class Database {
 	    return $data;
 	}
 
-	function get_where_row($table = '', $where = array()) {
-		$result = $this->get_where($table, $where);
+	function get_where_row($where = array()) {
+		$result = $this->get_where($this->table, $where);
 		if(!empty($result)) return $result[0];
 
 		return array();
@@ -129,7 +108,7 @@ class Database {
 		return array('table' => $modifiedTableName, 'sql' => $modifiedSql);
 	}
 
-	function insert($table, $insert_values = array()) {
+	function insert($insert_values = array()) {
 		try {
 			$columns = array();
 			$values = array();
@@ -144,7 +123,7 @@ class Database {
 				}
 			}
 
-			$this->query_string = "INSERT INTO {$this->parse_table($table)} (".implode(',', $columns).") VALUES (".implode(',', $dummy).")";
+			$this->query_string = "INSERT INTO {$this->parse_table($this->table)} (".implode(',', $columns).") VALUES (".implode(',', $dummy).")";
 
 			$sql = $this->db->prepare($this->query_string);
 			$response = $sql->execute($values);
@@ -160,7 +139,7 @@ class Database {
 	    }
 	}
 
-	function delete($table, $where = array()) {
+	function delete($where = array()) {
 		try {
 			$columns = array();
 			$values = array();
@@ -174,7 +153,7 @@ class Database {
 			}
 
 			$where_condition = implode(' and ', $columns);
-			$this->query_string = "DELETE from {$this->parse_table($table)} WHERE {$where_condition}";
+			$this->query_string = "DELETE from {$this->parse_table($this->table)} WHERE {$where_condition}";
 			if (empty($where_condition)) $this->query_string = str_replace('WHERE ', '', $this->query_string);
 			$sql = $this->db->prepare($this->query_string);
 			$response = $sql->execute($values);
@@ -189,7 +168,7 @@ class Database {
 			return false;
 		}
 	}
-	function update($table, $update_values = array(), $where = array()) {
+	function update($update_values = array(), $where = array()) {
 		try {
 			$columns = array();
 			$values = array();
@@ -211,7 +190,7 @@ class Database {
 			}
 			$where_condition = implode(' and ', $wcolumns);
 
-			$this->query_string = "UPDATE {$this->parse_table($table)}
+			$this->query_string = "UPDATE {$this->parse_table($this->table)}
 									SET ".implode(',', $columns)."
 									WHERE {$where_condition} ";
 
@@ -239,7 +218,7 @@ class Database {
 		}
 
 		$where_condition = (is_array($where) ? (!empty($temp) ? "WHERE ".implode(' and ', $temp) : '') : (empty($where) ? '' : "WHERE ".$where));
-		$this->query_string = "SELECT count(*) as count FROM {$this->parse_table($table)} {$where_condition}";
+		$this->query_string = "SELECT count(*) as count FROM {$this->parse_table($this->table)} {$where_condition}";
 
 		try {
 	    	$query = $this->db->query($this->query_string, true);
@@ -273,23 +252,5 @@ class Database {
 
 	function lastInsertedId() {
 		return $this->db->lastInsertId();
-	}
-
-	function getAllTables() {
-		$results = $this->query("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA = '".DB_NAME."' AND TABLE_NAME like '".DB_PREFIX."%'");
-		if (!empty($results)) {
-			foreach ($results as $row) {
-				$table_name = str_replace(DB_PREFIX, '', $row['TABLE_NAME']);
-				$this->addMethod($table_name, new Model($table_name, $this->db));
-			}
-		}
-	}
-
-	private function addMethod($name, $method) {
-		$this->{$name} = $method;
-	}
-
-	public function __call($name, $arguments) {
-		return call_user_func($this->{$name}, $arguments);
 	}
 }
