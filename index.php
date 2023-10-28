@@ -7,7 +7,6 @@
 	include('./core/utils.php');
 	include('./core/guard.php');
 
-
 	$protocol = (!empty($_SERVER['HTTPS']) ? 'https://' : 'http://');
 	$requestUrl = strtok('//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], '?');
 
@@ -18,10 +17,12 @@
 	$db = new Database();
 	$db->connect();
 
-	$guard = new Guard();
 
-	//IMPORT GLOBAL
+	//IMPORT GLOBALS
 	add_global('db', $db);
+	include('./core/initialize.php');
+
+	$guard = new Guard();
 	add_global('guard', $guard);
 	
 	$urlParams = explode('/', $requestString);

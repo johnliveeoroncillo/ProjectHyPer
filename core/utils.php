@@ -134,4 +134,15 @@ function get_status($status) {
 		'.$status.'
 	</span>';
 }
+
+function pascalCase($input) {
+	$pascalCaseString = preg_replace_callback(
+        '/\b\w/',
+        function($matches) {
+            return strtoupper($matches[0]);
+        },
+        $input
+    );
+    return $pascalCaseString;
+}
 ?>

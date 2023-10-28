@@ -1,15 +1,12 @@
 <?php
-include('model.php');
-
 class Database {
 	var $db;
 	var $error;
 	protected $query_string;
 	protected $query_order;
-	protected $dbprefix;
+	var $dbprefix;
 
 	public function __construct() {
-		// $this->connect();
 		$this->dbprefix = DB_PREFIX;
 	}
 
@@ -77,7 +74,6 @@ class Database {
 	function query($query = '', $exclude = false) {
 		$data = array();
 		$this->query_string = $query;
-
 		try {
 			if (!$exclude) {
 				$extract = $this->extractTable($this->query_string);
@@ -85,17 +81,17 @@ class Database {
 			} else {
 				$sql = $this->query_string;
 			}
-	    	$query = $this->db->query($sql);
+			$query = $this->db->query($sql);
 	    	$result = $query->fetchAll(PDO::FETCH_ASSOC);
 	    	$data = $result;
 	    }
 	    catch (Exception $e) {
-	    	// $this->error = $e->getMessage();
-			// throw new \Exception($e->getMessage(), 1);
+	    	$this->error = $e->getMessage();
+			throw new Exception($e->getMessage());
 		}
 		catch (PDOException $e) {
-			// $this->error = $e->getMessage();
-			// throw new \Exception($e->getMessage(), 1);
+			$this->error = $e->getMessage();
+			throw new PDOException($e->getMessage());
 		}
 
 	  return $data;
@@ -145,7 +141,6 @@ class Database {
 			}
 
 			$this->query_string = "INSERT INTO {$this->parse_table($table)} (".implode(',', $columns).") VALUES (".implode(',', $dummy).")";
-
 			$sql = $this->db->prepare($this->query_string);
 			$response = $sql->execute($values);
 			return $response;
@@ -277,19 +272,6 @@ class Database {
 
 	function getAllTables() {
 		$results = $this->query("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA = '".DB_NAME."' AND TABLE_NAME like '".DB_PREFIX."%'");
-		if (!empty($results)) {
-			foreach ($results as $row) {
-				$table_name = str_replace(DB_PREFIX, '', $row['TABLE_NAME']);
-				$this->addMethod($table_name, new Model($table_name, $this->db));
-			}
-		}
-	}
-
-	private function addMethod($name, $method) {
-		$this->{$name} = $method;
-	}
-
-	public function __call($name, $arguments) {
-		return call_user_func($this->{$name}, $arguments);
+		return $results;
 	}
 }
