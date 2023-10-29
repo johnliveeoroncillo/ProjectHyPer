@@ -15,15 +15,16 @@
 
 	//IMPORT CORE DEPENDENCIES
 	$db = new Database();
-	$db->connect();
+	$guard = new Guard();
 
+	$db->connect();
+	$db->instantiate();
 
 	//IMPORT GLOBALS
 	add_global('db', $db);
-	include('./core/initialize.php');
-
-	$guard = new Guard();
 	add_global('guard', $guard);
+
+	include_once('./core/initialize.php');
 	
 	$urlParams = explode('/', $requestString);
 

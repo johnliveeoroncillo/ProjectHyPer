@@ -1,9 +1,8 @@
 <?php
-global $db;
 class Model {
-	var $db;
-	var $table;
-	var $columns = [];
+	protected $db;
+	protected $table;
+	protected $columns = [];
 
 	public function __construct() {
 		global $db;
@@ -20,96 +19,6 @@ class Model {
 			}
 		} 
 		return $object;
-	}
-
-	function insert($payload) {
-		if (isset($payload->id)) {
-			unset($payload->id);
-		}
-		if (isset($payload->created_at)) {
-			unset($payload->created_at);
-		}
-
-		$payload = $this->parsePayload($payload);
-
-		$this->validateObject($payload, 'insert');
-
-		$response = $this->db->insert($this->table, $payload);
-		return $response;
-	}
-
-	function update($payload, $condition) {
-		$where = array();
-		if (is_numeric($condition)) {
-			$where['id'] = $condition;
-		} else {
-			$where = $condition;
-		}
-
-		$payload = $this->parsePayload($payload);
-
-
-		if (!empty($payload->id)) {
-			unset($payload->id);
-		}
-
-		$this->validateObject($payload, 'update');
-		$this->validateObject($where);
-
-
-		$response = $this->db->update($this->table, $payload, $where);
-		return $response;
-	}
-
-	function save($payload) {
-		if (empty($payload->id)) {
-			$response = $this->insert($payload);
-		} else {
-			$response = $this->update($payload, $payload->id);
-		}
-		return $response;
-	}
-
-	function findOne($condition) {
-		$where = array();
-		if (is_numeric($condition)) {
-			$where['id'] = $condition;	
-		}
-
-		$response = $this->db->get_where_row($this->table, $where);
-		return (object) $response;
-	}
-
-	function find($where = array()) {
-		$response = $this->db->get_where($this->table, $where);
-		return $response;
-	}
-
-	function delete($condition) {
-		$where = array();
-		if (is_numeric($condition)) {
-			$where['id'] = $condition;
-		}
-
-		$response = $this->db->delete($this->table, $where);
-		return $response;
-	}
-
-	function softDelete($condition) {
-		$where = array();
-		if (is_numeric($condition)) {
-			$where['id'] = $condition;
-		}
-
-		$attr = $this->attributes();
-		if (!empty($attr['deleted_at'])) {
-			$this->db->update($this->table, array('deleted_at' => date('Y-m-d H:i:s')), $where);
-		}
-	}
-
-	function query($sql, $exclude = false) {
-		$response = $this->db->query($sql, $exclude);
-		return $response;
 	}
 
 	private function parsePayload($payload) {

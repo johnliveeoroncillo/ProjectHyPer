@@ -16,7 +16,25 @@
 // $finds = $content->find();
 // echo json_encode($finds);
 
-$user = new Users();
-$users = $user->find();
-echo json_encode($users);
-;?>
+// $user = new Users();
+// $users = $user->find();
+// echo json_encode($users);
+
+$content = new Content();
+$content->text = "test";
+$response = $db->content->insert($content);
+
+echo json_encode($response);
+
+echo '<br><br>';
+
+$cont = $db->content->findOne(38);
+$cont->text = "HELLO";
+$res = $db->content->update($cont, 38);
+echo json_encode($res);
+
+
+// $contents = $db->content->find();
+// echo json_encode($contents);
+
+;?> 
