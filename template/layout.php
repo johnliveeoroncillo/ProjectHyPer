@@ -22,19 +22,12 @@
     
           
     <script src="assets/js/jquery-3.6.1.min.js"></script>
-
-    <?php
-      if (IS_DEVELOP) { ;?>
-        <script src="assets/js/script.raw.js"></script>
-    <?php } else { ;?>
-        <script src="assets/js/script.js"></script>
-    <?php } ;?>
+    <script src="assets/js/script.js"></script>
     <script>
           const modalGet = '<?=(!empty($_GET['modal']) ? $_GET['modal'] : '');?>';
           const modalUrl = '<?=(!empty($_GET['url']) ? $_GET['url'] : '');?>';
           if (modalGet !== '') setTimeout(() => { showModal(modalGet, modalUrl) }, 300);
           function showModal(modal = '', url = '') {
-            console.log(url);
               $('#'+modal).attr('style', 'display: grid !important;');
               $('#'+modal).find('#container').load(url, function() {
                   removeQs();
@@ -43,17 +36,57 @@
           function hideModal(modal = '') {
               $('#'+modal).removeAttr('style');
           }
-          function removeQs() {
-              // const params = new URLSearchParams(window.location.search);
-              //params.delete("test");
-              // history.pushState({pageID: 'about'}, 'About', '/about');
-
-              var uri = window.location.toString();
-              if (uri.indexOf("?") > 0) {
-                  var clean_uri = uri.substring(0, uri.indexOf("?"));
-                  window.history.replaceState({}, document.title, clean_uri);
+          function addQs(key, value) {
+            if ('URLSearchParams' in window) {
+                const url = new URL(window.location)
+                url.searchParams.set(key, value);
+                history.pushState(null, '', url);
+            }
+          }
+          function removeQs(key) {
+              if (key && 'URLSearchParams' in window) {
+                  const url = new URL(window.location)
+                  url.searchParams.delete(key);
+                  history.pushState(null, '', url);
               }
           }
+
+          $(document).ready(function() {
+              $('select').each(function(i ,obj) {
+                  if ($(obj).attr('value')) {
+                      $(obj).val($(obj).attr('value'));
+                  }
+              });
+
+              $('.dropdown').on('click', function() {
+                  if ($(this).parent().find('ul').is(':hidden')) {
+                    $(this).parent().find('ul').show();
+                  } else $(this).parent().find('ul').hide();
+              });
+
+              const url = window.location;
+              const fullUrl = url.href;
+              const path = url.pathname;
+              const isDevelop = fullUrl.includes('localhost');
+              const split = path.split('/');
+              const hasFolder = '<?=FOLDER;?>';
+              split.shift(); // remove empty
+              if (hasFolder) {
+                split.shift(); // remove folder
+              }
+              let newPath = split.join('/');
+              $('a[href]:not(.no-active)').each((element, obj) => {
+                  const origPath = path;
+                  newPath = newPath.split('/');
+                  newPath = newPath.shift();
+                  if ($(obj).hasClass('strict-active') && origPath !== '' && '/'+$(obj).attr('href') === origPath) {
+                      console.log(newPath);
+                      $(obj).addClass('link-active');
+                  } else if (!$(obj).hasClass('strict-active') && newPath !== '' && $(obj).attr('href').includes(newPath)) {
+                      $(obj).addClass('link-active');
+                  }
+              });
+          });
     </script>
   </head>
   <body class="flex flex-col" id="bg">
