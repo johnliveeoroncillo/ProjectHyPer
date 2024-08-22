@@ -1,11 +1,14 @@
 <?php
+	error_reporting(E_ALL ^ E_DEPRECATED);
 	session_start();
 	date_default_timezone_set('Asia/Manila');
-	include('./config/constant.php');
-	include('./core/render.php');
-	include('./core/database.php');
-	include('./core/utils.php');
-	include('./core/guard.php');
+	include(__DIR__ . '/config/constant.php');
+	include(__DIR__ . '/core/render.php');
+	include(__DIR__ . '/core/database.php');
+	include(__DIR__ . '/core/utils.php');
+	include(__DIR__ . '/core/guard.php');
+	include(__DIR__ .'/services/cloudinary.php');
+	include(__DIR__ .'/core/upload.php');
 
 	$protocol = (!empty($_SERVER['HTTPS']) ? 'https://' : 'http://');
 	$requestUrl = strtok('//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], '?');
@@ -24,10 +27,9 @@
 	add_global('db', $db);
 	add_global('guard', $guard);
 
-	include_once('./core/initialize.php');
+	include_once(__DIR__ . '/core/initialize.php');
 	
 	$urlParams = explode('/', $requestString);
-
 	if(strtolower(current($urlParams)) === 'api') {
 		$php_file = end($urlParams);
 		$explode = explode('.', $php_file);
@@ -37,7 +39,6 @@
 
 		$params = implode('/', $urlParams);
 		$current_method = (!empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET') === 'GET' ? '' : '_post';
-
 		include('api/'.$params.$current_method.$ext);
 		return;
 	}

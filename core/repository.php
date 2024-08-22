@@ -6,6 +6,8 @@ class Repository {
 	protected $query_string;
 	protected $query_order;
 	protected $dbprefix;
+	protected $query_limit;
+	protected $query_offset;
 
     public function __construct($table, $db) {
         $this->dbprefix = DB_PREFIX;
@@ -27,15 +29,16 @@ class Repository {
 			}
 		}
 
+
 		$where_condition = (is_array($where) ? (!empty($temp) ? "WHERE ".implode(' and ', $temp) : '') : (empty($where) ? '' : "WHERE ".$where));
-		$this->query_string = "SELECT * FROM {$this->parse_table($this->table)} {$where_condition} {$this->query_order}";
+		$this->query_string = "SELECT * FROM {$this->parse_table($this->table)} {$where_condition}";
 
         if ($single) {
-            $this->query_string = $this->query_string . " LIMIT 1";
+			$this->query_limit = "LIMIT 1";
         }
 
 		try {
-	    	$data = $this->query($this->query_string);
+	    	$data = $this->query($this->query_string, true);
 	    }
 	    catch (Exception $e) {
 	    	$this->error = $e->getMessage();
@@ -70,7 +73,7 @@ class Repository {
 			} else {
 				$sql = $this->query_string;
 			}
-			$query = $this->db->query($sql);
+			$query = $this->db->query($sql." {$this->query_order} {$this->query_limit} {$this->query_offset}");
 	    	$result = $query->fetchAll(PDO::FETCH_ASSOC);
 	    	$data = $result;
 	    }
@@ -151,6 +154,10 @@ class Repository {
 			$columns = array();
 			$values = array();
 
+			if (!empty($where) && is_numeric($where)) {
+				$where = array('id' => $where);
+			}
+
 			if(!empty($where)) {
 				foreach($where as $key => $value) {
 					$columns[] = "`{$key}`".' = ? ';
@@ -204,6 +211,10 @@ class Repository {
 					$values[] = $value;
 				}
 			}
+
+			// $columns[] = 'updated_at = ?';
+			// $values[] = 'now()';
+
 			$where_condition = implode(' and ', $wcolumns);
 
 			$this->query_string = "UPDATE {$this->parse_table($this->table)}
@@ -228,6 +239,7 @@ class Repository {
         if (!empty($payload->id)) {
             $id = $payload->id;
             unset($payload->id);
+
             $response = $this->update($payload, array('id' => $id));
         } else {
             $response = $this->insert($payload);
@@ -248,10 +260,11 @@ class Repository {
 
 		$where_condition = (is_array($where) ? (!empty($temp) ? "WHERE ".implode(' and ', $temp) : '') : (empty($where) ? '' : "WHERE ".$where));
 		$this->query_string = "SELECT count(*) as count FROM {$this->parse_table($this->table)} {$where_condition}";
-
 		try {
-	    	$query = $this->db->query($this->query_string, true);
-			return $query->fetch(); 
+	    	$query = $this->query($this->query_string, true);
+			if (count($query) > 0) {
+				return $query[0]->count;
+			}
 	    }
 	    catch (Exception $e) {
 	    	$this->error = $e->getMessage();
@@ -271,8 +284,18 @@ class Repository {
 		}
 	}
 
+	function offset($offset = 0) {
+		$this->query_offset = 'OFFSET '.$offset;
+	}
+
+	function limit($limit = 0) {
+		if (!empty($limit)) {
+			$this->query_limit = 'LIMIT '.$limit;
+		}
+	}
+
 	function error() {
-			return $this->error;
+		return $this->error;
 	}
 
 	function last_query() {

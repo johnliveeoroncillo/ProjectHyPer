@@ -6,6 +6,7 @@ class Database {
 	var $error;
 	protected $query_string;
 	protected $query_order;
+	protected $query_limit;
 	var $dbprefix;
 
 	public function __construct() {
@@ -23,14 +24,14 @@ class Database {
 		$password = DB_PASSWORD;
 
 		$options = array(PDO::ATTR_PERSISTENT => true);
-		if (!IS_DEVELOP) {
-			$options = array(
-				PDO::MYSQL_ATTR_SSL_KEY    => getcwd() . '/certs/client-key.pem',
-				PDO::MYSQL_ATTR_SSL_CERT=> getcwd() . '/certs/client-cert.pem',
-				PDO::MYSQL_ATTR_SSL_CA    => getcwd() . '/certs/server-ca.pem',
-				PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
-			);
-		}
+		// // if (!IS_DEVELOP) {
+		// 	$options = array(
+		// 		// PDO::MYSQL_ATTR_SSL_KEY    => getcwd() . '/certs/client-key.pem',
+		// 		// PDO::MYSQL_ATTR_SSL_CERT=> getcwd() . '/certs/client-cert.pem',
+		// 		// PDO::MYSQL_ATTR_SSL_CA    => getcwd() . '/certs/server-ca.pem',
+		// 		PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
+		// 	);
+		// // }
 		$db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password, $options);
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->db = $db;
@@ -39,6 +40,7 @@ class Database {
 	function query($query = '', $exclude = false) {
 		$data = array();
 		$this->query_string = $query;
+
 		try {
 			if (!$exclude) {
 				$extract = $this->extractTable($this->query_string);
@@ -46,7 +48,7 @@ class Database {
 			} else {
 				$sql = $this->query_string;
 			}
-			$query = $this->db->query($sql);
+			$query = $this->db->query($sql." {$this->query_order} {$this->query_limit}");
 	    	$result = $query->fetchAll(PDO::FETCH_ASSOC);
 	    	$data = $result;
 	    }
@@ -62,13 +64,42 @@ class Database {
 	  return $data;
 	}
 
+	function insert($table, $insert_values = array()) {
+		try {
+			$columns = array();
+			$values = array();
+			$dummy = array();
+
+
+			if(!empty($insert_values)) {
+				foreach($insert_values as $key => $value) {
+					$columns[] = "`{$key}`";
+					$dummy[] = '?';
+					$values[] = $value;
+				}
+			}
+
+			$this->query_string = "INSERT INTO {$this->parse_table($table)} (".implode(',', $columns).") VALUES (".implode(',', $dummy).")";
+			$sql = $this->db->prepare($this->query_string);
+			$response = $sql->execute($values);
+			
+            return $response;
+		}
+		catch (Exception $e) {
+			$this->error = $e->getMessage();
+		}
+		catch (PDOException $e) {
+			$this->error = $e->getMessage();
+	    }
+	}
+
 	function getAllTables() {
-		$results = $this->query("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA = '".DB_NAME."' AND TABLE_NAME like '".DB_PREFIX."%'");
+		$results = $this->query("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA = '".DB_NAME."' AND TABLE_NAME like '".DB_PREFIX."%'", true);
 		return $results;
 	}
 
 	function instantiate() {
-		$results = $this->query("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA = '".DB_NAME."' AND TABLE_NAME like '".DB_PREFIX."%'");
+		$results = $this->query("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA = '".DB_NAME."' AND TABLE_NAME like '".DB_PREFIX."%'", true);
 		if (!empty($results)) {
 			foreach ($results as $row) {
 				$table_name = str_replace(DB_PREFIX, '', $row['TABLE_NAME']);

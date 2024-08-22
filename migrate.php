@@ -22,7 +22,7 @@ if (!empty($migrations)) {
         return str_replace('.sql', '', basename($value));
     }, $migrations);
 
-    $migrated = $db->get_where("migration");
+    $migrated = $db->query("SELECT * FROM " . $migration_table, true);
     $mapped_migrated = array_map(function ($value) {
         return $value['timestamp'];
     }, $migrated);
@@ -83,11 +83,7 @@ if (!empty($migrations)) {
                     $newTableName = $db->parse_table($tableName);
                     $sql = preg_replace("/INSERT INTO `$tableName`/", "INSERT INTO `$newTableName`", $sql);
                 }
-            
-                $db->insert('migration', array(
-                    'timestamp' => $diff,
-                ));
-
+                $db->insert("migration", array('timestamp' => $diff));
                 $db->query($sql, true);
             } catch (PDOException $e) {
                 echo $e->getMessage();

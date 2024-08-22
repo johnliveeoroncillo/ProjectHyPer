@@ -10,8 +10,8 @@ class Render {
         
           $data = $this->view_to_string($php_file);
           if (strpos($php_file, 'modal') === false) {
-                $data['header'] = $this->php_to_string('./template/header/' . $this->header . '.php');
-                $data['footer'] = $this->php_to_string('./template/footer/'. $this->footer . '.php');
+                $data['header'] = $this->php_to_string(__DIR__ . '/../template/header/' . $this->header . '.php');
+                $data['footer'] = $this->php_to_string(__DIR__ . '/../template/footer/'. $this->footer . '.php');
                 include('./template/layout.php');
           }
           else echo $data['content']; // for modal
@@ -22,7 +22,7 @@ class Render {
             $explode = explode('.', $php_file);
             if(count($explode) <= 1) $php_file = $php_file.'.php';
 
-            $file = './pages/'.$php_file;
+            $file = __DIR__ . '/../pages/'.$php_file;
 
             if (is_dir(str_replace('.php', '', $file))) {
                 $file = str_replace('.php', '', $file) .'/index.php';
@@ -52,7 +52,7 @@ class Render {
             ob_start();
             $params = array();
             if (!empty($param) && !empty($param_value)) {
-                $params[$param] = $param_value;
+                $params[$param] = ($param_value === 'index' ? '' : $param_value);
             }
             include($file);
             $strView = ob_get_clean();
@@ -62,7 +62,7 @@ class Render {
         catch(Exception $e) {
             $data = array('message' => $e->getMessage());
             extract($data);
-            include('./template/error404.php');
+            include(__DIR__ . '/../template/error404.php');
         }
     }
 

@@ -1,15 +1,15 @@
 <?php
 
-function post($name = '') {
+function post($name = '', $fallback = '') {
 	if(empty($name) && !empty($_POST)) return $_POST;
 
-	return (!empty($_POST[$name]) ? $_POST[$name] : '');
+	return (isset($_POST[$name]) ? $_POST[$name] : $fallback);
 }
 
-function get($name = '') {
+function get($name = '', $fallback = '') {
 	if(empty($name) && !empty($_GET)) return $_GET;
 
-	return (!empty($_GET[$name]) ? $_GET[$name] : '');
+	return (!empty($_GET[$name]) ? $_GET[$name] : $fallback);
 }
 
 function redirect($url = '') {
@@ -19,11 +19,16 @@ function redirect($url = '') {
 }
 
 function save_session($data) {
-	if(is_array($data)) $_SESSION['user_session'] = $data;
+	if(is_array($data) || is_object($data)) $_SESSION['user_session'] = $data;
 	else $_SESSION['user_session'][$data] = $data;
 }
 
-function session($key = '') {
+function session($key = '', $all = false) {
+	if (empty($key) && !empty($_SESSION['user_session']) && !$all) {
+		$role = array_keys((array)$_SESSION['user_session']);
+		$key = $role[0];
+	}
+
 	if(empty($key)) return (isset($_SESSION['user_session']) ? $_SESSION['user_session'] : '');
 	else return (isset($_SESSION['user_session'][$key]) ? $_SESSION['user_session'][$key] : '');
 }

@@ -17,4 +17,6 @@
     define('SMTP_PORT', (empty($_ENV['SMTP_PORT']) ? '' : $_ENV['SMTP_PORT']));
 
     define('HOME_FILE', (empty($_ENV['HOME_FILE']) ? 'index' : $_ENV['HOME_FILE']));
+    define('REDIRECT', (empty($_ENV['REDIRECT']) ? 'dashboard' : $_ENV['REDIRECT']));
+    define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 ?>
