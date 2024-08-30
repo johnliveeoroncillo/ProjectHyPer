@@ -1,40 +1,77 @@
 <?php
-// $content = new Content();
-// $content->text = "new-upsert";
-// $inserted = $content->insert($content);
+	$jl->guard->add('guest');
 
-// $find = $content->findOne(1);
-// $updated = $content->update($find, 1);
+	// $jl->database->get_config();
+	
 
-// $find->text = "updated";
-// $saved = $content->save($find);
-// $saved1 = $content->save($content);
+	// $contents = $jl->database->content->find(array('text' => 'test2345', 'id' => 5));
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
-// $content->delete(99);
-// $content->softDelete(1);
+	// echo '<br><br><br>';
+	// $contents = $jl->database->content->findOne(5);
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
-// $finds = $content->find();
-// echo json_encode($finds);
+	// echo '<br><br><br>';
+	// $jl->database->content->order_by('id', 'DESC');
+	// $contents = $jl->database->content->find();
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
-// $user = new Users();
-// $users = $user->find();
-// echo json_encode($users);
+	// echo '<br><br><br>';
+	// $jl->database->content->order_by(array('id' => 'DESC', 'text' => 'ASC'));
+	// $contents = $jl->database->content->find();
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
-$content = new Content();
-$content->text = "test";
-$response = $db->content->insert($content);
+	// echo '<br><br><br>';
+	// $contents = $jl->database->content->count();
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
-echo json_encode($response);
+	// echo '<br><br><br>';
+	// $contents = $jl->database->content->insert(array('text' => 'JLOCODES'));
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
-echo '<br><br>';
+	// echo '<br><br><br>';
+	// $contents = $jl->database->content->update(array('text' => 'testupdate'), 1);
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
-$cont = $db->content->findOne(38);
-$cont->text = "HELLO";
-$res = $db->content->update($cont, 38);
-echo json_encode($res);
+	// echo '<br><br><br>';
+	// $data = $jl->database->content->findOne(5);
+	// $data->text = 'update from model';
+	// $contents = $jl->database->content->save($data);
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
+	// echo '<br><br><br>';
+	$data = new Content();
+	$data->text = 'sdad';
+	echo json_encode($data);
+	// $data->text = 'insert from model';
+	// $contents = $jl->database->content->update($data);
+	// echo  $jl->database->content->last_query();
+	// echo '<br>';
+	// echo json_encode($contents);
 
-// $contents = $db->content->find();
-// echo json_encode($contents);
+	// echo '<br><br><br>';
+	// $data = $jl->database->content->findOne(5);
+	// $contents = $jl->database->content->delete(5);
+	// echo $jl->database->content->last_query();
+	// echo $jl->database->content->error();
+	// echo '<br>';
+	// echo json_encode($contents);
+
 
 ;?> 

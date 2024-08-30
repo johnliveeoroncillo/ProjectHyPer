@@ -1,7 +1,12 @@
 <?php
 
 class Upload {
-    public static function file ($files, $target_dir = 'assets/img') {
+    private $config;
+    public function __construct($config) {
+        $this->config = $config;
+    }
+
+    function file ($files, $target_dir = 'assets/img') {
         if (!empty($files)) {
             $tmp_name = $files['tmp_name'];
             $filename = basename($files['name']);
@@ -15,10 +20,10 @@ class Upload {
                     if (IS_DEVELOP) {
                         $name = random().'.jpg';
                         $targetDir = $target_dir . '/' . $name;
-                        $dirname = ROOT . '/' . $targetDir;
+                        $dirname = getcwd() . '/' . $targetDir;
                         move_uploaded_file($tmp_name, $dirname);
 
-                        return array('url' => BASE_URL . '/' . $targetDir);
+                        return array('url' => $this->config['base_url'] . '/' . $targetDir);
                     } else {
                         try {
                             $response = \Cloudinary\Uploader::upload($tmp_name);

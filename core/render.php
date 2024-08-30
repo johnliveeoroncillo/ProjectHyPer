@@ -6,7 +6,7 @@ class Render {
 
     function load_page($php_file = '') {
           global $db;
-          if(empty($php_file)) $php_file = HOME_FILE;
+          if(empty($php_file)) $php_file = 'index';
         
           $data = $this->view_to_string($php_file);
           if (strpos($php_file, 'modal') === false) {
