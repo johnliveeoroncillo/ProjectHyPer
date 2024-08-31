@@ -1,22 +1,27 @@
 <?php
+include 'model.php';
+
 class Repository {
     var $error;
+    var $table;
     private $db;
-    private $table;
+	private $config;
+
 	protected $query_string;
 	protected $query_order;
 	protected $dbprefix;
 	protected $query_limit;
 	protected $query_offset;
 
-    public function __construct($table, $db) {
-        $this->dbprefix = DB_PREFIX;
+    public function __construct($table, $config, $db) {
         $this->table = $table;
+		$this->config = $config;
         $this->db = $db;
+		$this->initModel();
     }
 
 	function parse_table($table) {
-		return $this->dbprefix.$table;
+		return $this->config['DB_PREFIX'].$table;
 	}
 
 	function find($where = array(), $single = false) {
@@ -125,6 +130,7 @@ class Repository {
 			$values = array();
 			$dummy = array();
 
+			unset($insert_values->id);
 
 			if(!empty($insert_values)) {
 				foreach($insert_values as $key => $value) {
@@ -304,5 +310,18 @@ class Repository {
 
 	function lastInsertedId() {
 		return $this->db->lastInsertId();
+	}
+
+	function initModel() {
+		$GLOBALS['repository'] = $this;
+		$classModelName = pascalCase($this->table);
+		$classString = "class {$classModelName} extends Model {
+			function __construct() {
+				global \$repository;
+				\$this->table = '{$this->table}';
+				parent::__construct(\$repository);
+			}
+		}";
+		eval($classString);
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+$guard->add('guest');
 // $content = new Content();
 // $content->text = "new-upsert";
 // $inserted = $content->insert($content);
@@ -20,21 +21,28 @@
 // $users = $user->find();
 // echo json_encode($users);
 
-$content = new Content();
-$content->text = "test";
-$response = $db->content->insert($content);
+// $content = new Content();
+// $content->text = "test";
+// $response = $db->content->insert($content);
+// echo json_encode($response);
 
-echo json_encode($response);
 
-echo '<br><br>';
+// echo '<br><br>';
 
-$cont = $db->content->findOne(38);
-$cont->text = "HELLO";
-$res = $db->content->update($cont, 38);
-echo json_encode($res);
+// $cont = $db->content->findOne($response->id);
+// echo json_encode($cont);
+// $cont->text = "HELLO";
+// $res = $db->content->update($cont, 38);
+// echo json_encode($res);
+
+// $db->content->delete();
+// echo $db->content->error();
 
 
 // $contents = $db->content->find();
 // echo json_encode($contents);
 
 ;?> 
+
+<h1>Guest</h1>
+

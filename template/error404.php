@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <base href="<?=BASE_URL;?>" />
+    <base href="<?=BASE_URL;?>/" />
     <title><?=APP_NAME;?> - ERROR</title>
     <link href="assets/img/logo-default.png" rel="icon" />
     <link href="assets/css/main.css" rel="stylesheet">

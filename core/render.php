@@ -12,7 +12,7 @@ class Render {
           if (strpos($php_file, 'modal') === false) {
                 $data['header'] = $this->php_to_string(__DIR__ . '/../template/header/' . $this->header . '.php');
                 $data['footer'] = $this->php_to_string(__DIR__ . '/../template/footer/'. $this->footer . '.php');
-                include('./template/layout.php');
+                include(__DIR__ . '/../template/layout.php');
           }
           else echo $data['content']; // for modal
     }

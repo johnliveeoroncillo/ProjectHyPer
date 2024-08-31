@@ -1,5 +1,5 @@
 <?php
-require ROOT . '/vendor/autoload.php';
+require ROOT . FOLDER . '/vendor/autoload.php';
 
 \Cloudinary::config([ 
     "cloud_name" => (empty($_ENV['CL_NAME']) ? 'dh9xwk7fi' : $_ENV['CL_NAME']), 

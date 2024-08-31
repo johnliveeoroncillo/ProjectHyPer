@@ -14,7 +14,7 @@ function get($name = '', $fallback = '') {
 
 function redirect($url = '') {
 	if($url === '/') return header('location: '.BASE_URL);
-	if(!empty($url)) return header('location: '.BASE_URL.$url);
+	else if(!empty($url)) return header('location: '.BASE_URL.$url);
 	else if(!empty($_SERVER['HTTP_REFERER'])) return header('location: '.$_SERVER['HTTP_REFERER']);
 }
 
