@@ -1,7 +1,7 @@
 <?php
     define('APP_NAME', 'PHPJL');
     
-    define('FOLDER', (empty($_ENV['FOLDER']) ? '' : $_ENV['FOLDER']));
+    define('FOLDER', (empty($_ENV['FOLDER']) ? '/' : $_ENV['FOLDER']));
     define('BASE_URL', '//'.$_SERVER['HTTP_HOST'].FOLDER);
     define('IS_DEVELOP', strpos($_SERVER['HTTP_HOST'], 'local') !== false);
     define('CURRENT_URL', $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
