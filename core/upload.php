@@ -18,7 +18,7 @@ class Upload {
                         $dirname = ROOT . '/' . $targetDir;
                         move_uploaded_file($tmp_name, $dirname);
 
-                        return array('url' => BASE_URL . '/' . $targetDir);
+                        return array('url' => BASE_URL . $targetDir);
                     } else {
                         try {
                             $response = \Cloudinary\Uploader::upload($tmp_name);
