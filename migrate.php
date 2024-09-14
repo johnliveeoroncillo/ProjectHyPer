@@ -40,13 +40,13 @@ if (!empty($migrations)) {
 
 
     $migrated = $db->db->query("SELECT * FROM " . $migration_table);
-    $migrated = $query->fetchAll(PDO::FETCH_ASSOC);
+    $migrated = $migrated->fetchAll(PDO::FETCH_ASSOC);
 
     $mapped_migrated = array_map(function ($value) {
         return $value['timestamp'];
     }, $migrated);
     $diffs = array_diff($mapped, $mapped_migrated);
-    
+
     if (!empty($diffs)) {
         foreach ($diffs as $diff) {
             try {
