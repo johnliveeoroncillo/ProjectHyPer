@@ -4,8 +4,8 @@
 class Guard {
 	var $guard = array('guest', true, false);
 	var $url;
-	protected $login_url = '/'.LOGIN_URL;
-	protected $protected_url = '/'.PROTECTED_URL;
+	protected $login_url = LOGIN_URL;
+	protected $protected_url = PROTECTED_URL;
 	public function __construct() {
 		$this->url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	}
