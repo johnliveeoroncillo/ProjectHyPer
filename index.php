@@ -35,7 +35,7 @@
 
 	$urlParams = explode('/', $requestString);
 	$find_api = array_search('api', $urlParams);
-	if($find_api) {
+	if($find_api !== false) {
 		$php_file = end($urlParams);
 		$explode = explode('.', $php_file);
 		$ext = '';
