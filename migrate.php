@@ -1,28 +1,47 @@
 <?php
 session_start();
 date_default_timezone_set('Asia/Manila');
+include('./core/env.php');
+$env = new Env();
+$env->init();
+
 include('./config/constant.php');
 include('./core/render.php');
 include('./core/database.php');
 include('./core/utils.php');
 include('./core/guard.php');
+
 $db = new Database();
 $db->connect();
 
 $migration_table = $db->parse_table("migration");
 
-$response = $db->query("SELECT * FROM information_schema.tables WHERE TABLE_NAME = '{$migration_table}' and TABLE_SCHEMA = '".DB_NAME."' ", true);
+$query = $db->db->query("SELECT * FROM information_schema.tables WHERE TABLE_NAME = '{$migration_table}' and TABLE_SCHEMA = '".$config['DB_NAME']."' ");
+$result = $query->fetchAll(PDO::FETCH_ASSOC);
+$response = $result;
 if (empty($response)) {
-    $db->query("CREATE TABLE `{$migration_table}` (timestamp varchar(50) not null)", true);
+    $query = $db->db->prepare("CREATE TABLE `{$migration_table}` (timestamp varchar(50) not null)");
+    $query->execute();
 }
 
-$migrations = glob('./migrations/*.sql');
+$migrations = glob('./migrations/*.sql', GLOB_BRACE);
 if (!empty($migrations)) {
+
+    array_multisort(
+        array_map( 'filemtime', $migrations ),
+        SORT_NUMERIC,
+        SORT_ASC,
+        $migrations
+    );
+
     $mapped = array_map(function ($value) {
         return str_replace('.sql', '', basename($value));
     }, $migrations);
 
-    $migrated = $db->query("SELECT * FROM " . $migration_table, true);
+
+    $migrated = $db->db->query("SELECT * FROM " . $migration_table);
+    $migrated = $query->fetchAll(PDO::FETCH_ASSOC);
+
     $mapped_migrated = array_map(function ($value) {
         return $value['timestamp'];
     }, $migrated);
@@ -55,8 +74,6 @@ if (!empty($migrations)) {
                     $mode = 'insert';
                 }
 
-
-
                 preg_match($pattern, $sql, $matches);
 
                 if ($mode === 'create' && count($matches) >= 3) {
@@ -83,8 +100,8 @@ if (!empty($migrations)) {
                     $newTableName = $db->parse_table($tableName);
                     $sql = preg_replace("/INSERT INTO `$tableName`/", "INSERT INTO `$newTableName`", $sql);
                 }
-                $db->insert("migration", array('timestamp' => $diff));
-                $db->query($sql, true);
+                $db->db->query("INSERT INTO {$migration_table} (`timestamp`) VALUES ('{$diff}')");
+                $db->db->query($sql);
             } catch (PDOException $e) {
                 echo $e->getMessage();
                 die();
