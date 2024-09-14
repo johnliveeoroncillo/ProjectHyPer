@@ -68,7 +68,7 @@ class Repository {
 		return array();
 	}
 
-	function query($query = '', $exclude = false) {
+	function query($query = '', $exclude = false, $from_model = false) {
 		$data = array();
 		$this->query_string = $query;
 		try {
@@ -78,7 +78,7 @@ class Repository {
 			} else {
 				$sql = $this->query_string;
 			}
-			$query = $this->db->query($sql." {$this->query_order} {$this->query_limit} {$this->query_offset}");
+			$query = $this->db->query($sql." ".(!$from_model ? $this->query_order.' '.$this->query_limit.' '.$this->query_offset : ''));
 	    	$result = $query->fetchAll(PDO::FETCH_ASSOC);
 	    	$data = $result;
 	    }
@@ -314,7 +314,7 @@ class Repository {
 
 	function initModel() {
 		$GLOBALS['repository'] = $this;
-		$classModelName = pascalCase($this->table);
+		$classModelName = str_replace('_', '', pascalCase($this->table));
 		$classString = "class {$classModelName} extends Model {
 			function __construct() {
 				global \$repository;
