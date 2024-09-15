@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <base href="<?=BASE_URL;?>" />
-    <title><?=APP_NAME;?></title>
+    <title><?=$data['doc_title'];?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -59,9 +59,15 @@
               });
 
               $('.dropdown').on('click', function() {
-                  if ($(this).parent().find('ul').is(':hidden')) {
-                    $(this).parent().find('ul').show();
-                  } else $(this).parent().find('ul').hide();
+                  if ($(this).closest('.dropdown').find('ul').is(':hidden')) {
+                    setTimeout(() => {
+                      $(this).closest('.dropdown').find('ul').show();
+                    }, 50);
+                  } else {
+                    setTimeout(() => {
+                      $(this).closest('.dropdown').find('ul').hide()
+                    }, 50);
+                  };
               });
 
               const url = window.location;
@@ -71,7 +77,7 @@
               const split = path.split('/');
               const hasFolder = '<?=FOLDER;?>';
               split.shift(); // remove empty
-              if (hasFolder) {
+              if (hasFolder !== '/') {
                 split.shift(); // remove folder
               }
               let newPath = split.join('/');
@@ -80,11 +86,18 @@
                   newPath = newPath.split('/');
                   newPath = newPath.shift();
                   if ($(obj).hasClass('strict-active') && origPath !== '' && '/'+$(obj).attr('href') === origPath) {
-                      console.log(newPath);
                       $(obj).addClass('link-active');
                   } else if (!$(obj).hasClass('strict-active') && newPath !== '' && $(obj).attr('href').includes(newPath)) {
                       $(obj).addClass('link-active');
+                  } else if (newPath === '' && $(obj).attr('href') === '/') {
+                      $(obj).addClass('link-active');
                   }
+              });
+
+              $(document).on('click', function() {
+                  $('.dropdown').find('ul:visible:not(.no-close)').each(function(i, obj) {
+                      $(obj).closest('.dropdown').find('ul').hide();
+                  });
               });
           });
     </script>
@@ -92,7 +105,7 @@
   <body class="flex flex-col" id="bg">
       <?=(!empty($data['header']) ? $data['header'] : '');?>
       <?=(!empty($data['content']) ? $data['content'] : '');?>
-      <!-- <?=(!empty($data['footer']) ? $data['footer'] : '');?> -->
+      <?=(!empty($data['footer']) ? $data['footer'] : '');?>
 
       <?php
         $modal = glob('./**/*-modal.php');
@@ -102,36 +115,5 @@
             }
         }
       ;?>
-      <script>
-        $(document).ready(function() {
-            $('.dropdown').on('click', function() {
-                if ($(this).find('ul').is(':hidden')) {
-                  $(this).find('ul').show();
-                } else $(this).find('ul').hide();
-            });
-
-            $('select[name][value]').each(function(e, obj) {
-                const value = $(obj).attr('value');
-                $(obj).val(value);
-            });
-
-            const url = window.location;
-            const fullUrl = url.href;
-            const path = url.pathname;
-            const isDevelop = fullUrl.includes('localhost');
-            const split = path.split('/');
-            split.shift(); // remove empty
-            split.shift(); // remove folder
-            let newPath = split.join('/');
-            $('a[href]:not(.no-active)').each((element, obj) => {
-              console.log(newPath);
-                newPath = newPath.split('/');
-                newPath = newPath.shift();
-                if (newPath !== '' && $(obj).attr('href').includes(newPath)) {
-                    $(obj).addClass('link-active');
-                }
-            });
-        });
-      </script>
   </body>
 </html>
