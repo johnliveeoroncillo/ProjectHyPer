@@ -4,6 +4,28 @@ $response = array();
 
 $id = get('id');
 
+
+// $lastId = $db->news->lastInsertedId();
+// echo $lastId;
+
+// /**
+//  * Pagination
+//  */
+// $news = $db->news->paginate(
+//     array(
+//         'page' => 1,
+//         'limit' => 10,
+//         'order' => array(
+//             'id' => 'DESC',
+//         ),
+//         'include' => array(
+//             'news_details' => true
+//         )
+//     )
+// );
+
+// echo $db->news->lastQuery();
+
 /**
  * Find All
  */
@@ -13,30 +35,35 @@ $id = get('id');
 /**
  * Find By Id
  */
-$news = $db->news->findOne(
-    array(
-            'where' => array('id' => 4),
-            'order' => array(
-                'id' => 'DESC',
-            ),
-            'include' => array(
-                'news_details' => array(
-                    'single' => true,
-                    'where' => array(
-                        'id' => 1
-                    ),
-                    'include' => array(
-                        'news_attachments' => array(
-                            'where' => array(
-                                'created_at' => '2024-12-09 20:22:40'
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    );
-$response['news_by_id'] = $news;
+// $news = $db->news->find(
+//     array(
+//             'order' => array(
+//                 'id' => 'DESC',
+//             ),
+//             'include' => array(
+//                 'news_details' => array(
+//                     'single' => true,
+//                     'where' => array(
+//                         'id' => 1
+//                     ),
+//                     'include' => array(
+//                         'news_attachments' => array(
+//                             'where' => array(
+//                                 'created_at' => '2024-12-09 20:22:40'
+//                             )
+//                         )
+//                     )
+//                 )
+//             )
+//         )
+//     );
+// $response['news_by_id'] = $news;
+
+// /**
+//  * Count Id
+//  */
+// $news = $db->news->count(4);
+// $response['news_by_id'] = $news;
 
 
 // $where = array(

@@ -13,6 +13,7 @@ class Repository {
 	protected $query_order;
 	protected $query_group;
 	protected $query_having;
+	protected $query_offset;
 
     public function __construct($table, $config, $context) {
 		$this->config = $config;
@@ -106,10 +107,10 @@ class Repository {
 	function find($payload = array()) {
 		$data = array();
 		$where = $this->whereBuilder($payload);
-		$select = $this->selectBuilder([], $where);
+		$select = $this->selectBuilder($payload['select'] ?? [], $where);
 		try {
 	    	$data = $this->executeQuery($select, $where->values, true);
-			$data = $this->includeBuilder($data, $payload);
+			$data = $this->includeBuilder($data ?? [], $payload);
 			return $data;
 	    }
 	    catch (Exception $e) {
@@ -236,7 +237,11 @@ class Repository {
 	 */
 	function count($where = array()) {
 		try {
-			
+			$count_query = "count(*) as count";
+			$where = $this->whereBuilder($where);
+			$select = $this->selectBuilder($count_query, $where);
+			$response = $this->executeQuery($select, $where->values, true);
+			return $response[0]->count;
 	    }
 	    catch (Exception $e) {
 	    	$this->error = $e->getMessage();
@@ -250,6 +255,25 @@ class Repository {
 	    return 0;
 	}
 
+	/**
+	 * Paginate
+	 * @param Object $pagination
+	 * @return Object
+	 */
+	function paginate($pagination = array()) {
+		$paginate = array();
+		$page = $pagination['page'] ?? 1;
+		$limit = $pagination['limit'] ?? 10;
+
+		unset($pagination['page']);
+		unset($pagination['limit']);
+
+		$condition = $pagination;
+		$condition['limit'] = $limit;
+		$condition['offset'] = $page == 1 ? 0 : ($page - 1) * $limit;
+		$data = $this->find($condition);
+		return $data;
+	}
 
 	/**
 	 * Execute Query
@@ -297,7 +321,13 @@ class Repository {
 	 * @return String
 	 */
 	private function selectBuilder($select = array(), $where = array()) {
-		$query = "SELECT * FROM {$this->table} {$where->query} {$this->query_group} {$this->query_having} {$this->query_order} {$this->query_limit}";
+		if (empty($select)) {
+			$select = ['*'];
+		}
+		if (is_array($select)) {
+			$select = implode(',', $select);
+		}
+		$query = "SELECT {$select} FROM {$this->table} {$where->query} {$this->query_group} {$this->query_having} {$this->query_order} {$this->query_limit} {$this->query_offset}";
 		$this->setQueryString($query);
 		return $query;
 	}
@@ -309,6 +339,7 @@ class Repository {
 	 */
 	private function whereBuilder($where = array()) {
 		// Reset
+		unset($where['select']);
 		$this->resetBuilder();
 
 		// Start
@@ -324,6 +355,7 @@ class Repository {
 		$where_order = $where['order'] ?? '';
 		$where_having = $where['having'] ?? '';
 		$include_delete = $where['delete'] ?? false;
+		$where_offset = $where['offset'] ?? '';
 
 		if (!is_array($where_payload)) {
 			$where_payload = array(
@@ -331,16 +363,28 @@ class Repository {
 			);
 		}
 
-		if (!empty($where_limit)) {
+		if (isset($where['limit'])) {
+			unset($where['limit']);
+			unset($where_payload['limit']);
 			$this->limitBuilder($where_limit);
 		}
 
 		if (!empty($where_order)) {
+			unset($where['order']);
+			unset($where_payload['order']);
 			$this->orderBuilder($where_order);
 		}
 
 		if (!empty($where_having)) {
+			unset($where['having']);
+			unset($where_payload['having']);
 			$this->havingBuilder($where_having);
+		}
+
+		if (isset($where['offset'])) {
+			unset($where['offset']);
+			unset($where_payload['offset']);
+			$this->offsetBuilder($where_offset);
 		}
 
 		$operations = array();
@@ -471,9 +515,20 @@ class Repository {
 	 * @return String
 	 */
 	private function limitBuilder($limit) {
-		if (!empty($limit)) {
+		// if (!empty($limit)) {
 			$this->query_limit = "LIMIT {$limit}";
-		}
+		// }
+	}
+
+	/**
+	 * Offset Builder
+	 * @param Number $offset
+	 * @return String
+	 */
+	private function offsetBuilder($offset) {
+		// if (!empty($offset)) {
+			$this->query_offset = "OFFSET {$offset}";
+		// }
 	}
 
 	/**
@@ -602,28 +657,10 @@ class Repository {
 		$this->query_order = '';
 		$this->query_group = '';
 		$this->query_having = '';
+		$this->query_offset = '';
 	}
 
-	////////--------
-
-
-	function order_by($order_by = '') {
-		if(!empty($order_by)) {
-			$this->query_order = 'ORDER BY '.$order_by;
-		}
-	}
-
-	function offset($offset = 0) {
-		$this->query_offset = 'OFFSET '.$offset;
-	}
-
-	function limit($limit = 0) {
-		if (!empty($limit)) {
-			$this->query_limit = 'LIMIT '.$limit;
-		}
-	}
-
-	function last_query() {
+	function lastQuery() {
 		return $this->query_string;
 	}
 }

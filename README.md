@@ -1,7 +1,7 @@
 
 # ProjectHyPer
 
-ProjectHyPer is a high-performance, full-stack PHP framework designed to accelerate web application development. Inspired by modern frameworks like Nuxt.js and Prisma, ProjectHyPer offers a streamlined developer experience, robust features, and a focus on performance and scalability.
+ProjectHyPer is a high-performance, full-stack PHP framework designed to accelerate web application development. Inspired by modern frameworks like Nuxt.js and Prisma, Phoenix offers a streamlined developer experience, robust features, and a focus on performance and scalability.
 
 ## Features
 
@@ -67,7 +67,7 @@ PROTECTED_URL=
    - url (field)
 ---
 
-#### `find`
+#### `find` - Find many records
 `$db->{$table}->find()`
 #### Usage:
 ```php
@@ -77,7 +77,7 @@ PROTECTED_URL=
     // returns list of news
 ```
 
-#### `findOne`
+#### `findOne` - Find one record
 `$db->{$table}->findOne()`
 ```php
     $db->news->findOne();
@@ -439,7 +439,7 @@ $condition = array(
     // and created_at between 'date1' and 'date2'
 ```
 
-#### `insert`
+#### `insert` - Insert new record
 `$db->{$table}->insert()`
 #### Usage:
 ```php
@@ -458,7 +458,7 @@ $condition = array(
     }
 ```
 
-#### `update`
+#### `update` - Update a record
 `$db->{$table}->update()`
 #### Usage:
 ```php
@@ -475,7 +475,7 @@ $condition = array(
     }
 ```
 
-#### `delete`
+#### `delete` - Delete a record
 `$db->{$table}->delete()`
 This will hard delete your record and irreversible
 #### Usage:
@@ -487,7 +487,7 @@ This will hard delete your record and irreversible
 ```
 
 
-#### `soft delete`
+#### `soft delete` - Soft delete a record
 `$db->{$table}->softDelete()`
 This will soft delete your record and reversible
 #### Usage:
@@ -498,7 +498,7 @@ This will soft delete your record and reversible
     $db->news->softDelete(1); // where 1 is ID
 ```
 
-#### `upsert`
+#### `upsert` - Insert or Update a record
 `$db->{$table}->save()`
 #### Usage:
 ```php
@@ -528,15 +528,99 @@ This will soft delete your record and reversible
         deleted_at: null
     }
 ```
+
+#### `count` - Returns count
+`$db->{$table}->count()`
+#### Usage:
+```php
+    $where = array('id' => 1);
+    $db->news->count($where);
+    or
+    $db->news->count(1); // where 1 is ID
+```
+
+#### `paginate` - To return pagination
+`$db->{$table}->paginate()`
+#### Usage:
+```php
+    $paginate = array(
+        'page' => 1,
+        'limit' => 10
+    )
+    $db->news->paginate($paginate);
+    // Returns array of data
+
+    // You can combine it also with where, order by etc.
+    $news = $db->news->paginate(
+        array(
+            'page' => 1,
+            'limit' => 10,
+            'where' => array(),
+            'order' => array(
+                'id' => 'DESC',
+            ),
+            'include' => array(
+                'news_details' => true
+            )
+        )
+    );
+```
+
+#### `lastQuery` - Returns the last query executed
+`$db->{$table}->lastQuery()`
+#### Usage:
+```php
+    $news = $db->news->paginate(
+        array(
+            'page' => 1,
+            'limit' => 10,
+            'where' => array(),
+            'order' => array(
+                'id' => 'DESC',
+            ),
+            'include' => array(
+                'news_details' => true
+            )
+        )
+    );
+
+    echo $db->news->lastQuery();
+    // SELECT * FROM news
+    // WHERE deleted_at IS NULL
+    // ORDER BY id DESC LIMIT 10 OFFSET 0
+```
+
+#### `error` - Returns error message of the current query
+`$db->{$table}->error()`
+#### Usage:
+```php
+    $news = new News();
+    $news->name = 'test';
+    $news->test = 'Test';
+
+    $db->news->insert($news);
+
+    echo $db->news->error();
+    // PHP FATAL ERROR: .... test is not existing
+```
+
+#### `lastInsertedId` - Returns last inserted ID (AI)
+`$db->{$table}->lastInsertedId()`
+#### Usage:
+```php
+    $lastId = $db->news->lastInsertedId();
+    echo $lastId;
+    // 1
+```
 ## Roadmap
-- [ ]  count
-- [ ]  offset
+- [x]  count
+- [x]  offset
 - [ ]  addWhere
 - [ ]  addGroup
-- [ ]  pagination
-- [ ]  lastQuery
-- [ ]  lastInsertedId
-- [ ]  error
+- [x]  pagination
+- [x]  lastQuery
+- [x]  lastInsertedId
+- [x]  error
 - [ ]  API Documentation
 - [ ]  Route Documentation
 - [ ]  Layout/Header/Footer Documentation
