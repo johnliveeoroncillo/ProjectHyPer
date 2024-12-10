@@ -1,0 +1,8 @@
+CREATE TABLE `news_attachments` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `news_details_id` INT NOT NULL,
+  `url` VARCHAR(45) NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` DATETIME NULL,
+  PRIMARY KEY (`id`));

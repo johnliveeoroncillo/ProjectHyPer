@@ -1,5 +1,6 @@
 <?php
 $guard->add('guest');
+
 // $content = new Content();
 // $content->text = "new-upsert";
 // $inserted = $content->insert($content);
