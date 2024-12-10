@@ -5,6 +5,11 @@ $response = array();
 $id = get('id');
 
 
+
+
+// $news = $db->news->find();
+// echo $db->news->lastQuery();
+
 // $lastId = $db->news->lastInsertedId();
 // echo $lastId;
 

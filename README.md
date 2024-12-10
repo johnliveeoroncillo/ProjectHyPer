@@ -487,7 +487,7 @@ This will hard delete your record and irreversible
 ```
 
 
-#### `soft delete` - Soft delete a record
+#### `softDelete` - Soft delete a record
 `$db->{$table}->softDelete()`
 This will soft delete your record and reversible
 #### Usage:
@@ -617,6 +617,8 @@ This will soft delete your record and reversible
 - [x]  offset
 - [ ]  addWhere
 - [ ]  addGroup
+- [ ]  addOrderBy
+- [ ]  addHaving
 - [x]  pagination
 - [x]  lastQuery
 - [x]  lastInsertedId

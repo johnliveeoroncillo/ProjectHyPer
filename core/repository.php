@@ -15,6 +15,8 @@ class Repository {
 	protected $query_having;
 	protected $query_offset;
 
+	// protected $add_where;
+
     public function __construct($table, $config, $context) {
 		$this->config = $config;
 		$this->context = $context;
@@ -342,6 +344,7 @@ class Repository {
 		unset($where['select']);
 		$this->resetBuilder();
 
+
 		// Start
 		$where_payload = $where['where'] ?? $where;
 
@@ -407,6 +410,8 @@ class Repository {
 				$opt = array('eq' => $opt);
 			}
 
+
+
 			switch ($keys) {
 				case "or":
 				case "and":
@@ -423,6 +428,8 @@ class Repository {
 					break;
 			}
 		}
+
+
 
 		$columns = array_merge(...array_map(function($val) {
 			return $val['columns'];
@@ -648,6 +655,19 @@ class Repository {
 			$this->query_having = " HAVING " . (!is_array($having) ? $having : implode (' and ', $having));
 		}
 	}
+
+	// function addWhere($where) {
+	// 	if (empty($where)) {
+	// 		return;
+	// 	}
+
+	// 	if (!empty($where)) {
+	// 		$this->add_where[] = $where;
+	// 		return;
+	// 	}
+
+	// 	$this->add_where = $where;
+	// }
 
 	/**
 	 * Builder resetter
