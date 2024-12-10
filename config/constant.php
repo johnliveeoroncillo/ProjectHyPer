@@ -1,5 +1,5 @@
 <?php
-    define('APP_NAME', 'PHPJL');
+    define('APP_NAME', 'ProjectHyPer');
     
     define('FOLDER', (empty($_ENV['FOLDER']) ? '/' : $_ENV['FOLDER']));
     define('BASE_URL', '//'.$_SERVER['HTTP_HOST'].FOLDER);

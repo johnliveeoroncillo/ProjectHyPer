@@ -1,4 +1,0 @@
-CREATE TABLE `content` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `text` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`));

@@ -13,6 +13,7 @@
 	include(__DIR__ . '/core/guard.php');
 	include(__DIR__ .'/services/cloudinary.php');
 	include(__DIR__ .'/core/upload.php');
+	include(__DIR__ .'/core/http.php');
 
 	add_global('env', $env);
 
@@ -23,7 +24,7 @@
 	define('uri_string', $requestString);
 
 	//IMPORT CORE DEPENDENCIES
-	$db = new Database();
+	$db = new Database($config);
 	$guard = new Guard();
 
 	$db->connect();
@@ -45,11 +46,23 @@
 
 		$params = implode('/', $urlParams);
 
-		$current_method = (!empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET') === 'GET' ? '' : '_post';
+		$current_method = (!empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET') === 'GET' ? '' : '_' . (strtolower($_SERVER['REQUEST_METHOD']));
+
+		if (in_array($current_method, ['_patch', '_delete'])) {
+			parse_str(file_get_contents('php://input'), $_POST);
+			Http::parse_raw_http_request($_POST);
+		}
 
 		$api_url = $params.$current_method.$ext;
+
 		if (strpos($api_url, 'api') === false) {
 			$api_url = 'api/'.$api_url;
+		}
+
+		if (!file_exists(ROOT . '/' . $api_url)) {
+			http_response_code(404);
+			echo 'Not found';
+			return;
 		}
 		include($api_url);
 		return;

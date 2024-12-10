@@ -150,4 +150,23 @@ function pascalCase($input) {
     );
     return $pascalCaseString;
 }
+
+function json($input, $decode = false) {
+	if ($decode) return json_decode($input);
+	return json_encode($input, JSON_PRETTY_PRINT);
+}
+
+function cloneObject($payload = array()) {
+	return json_decode(json_encode((array) $payload));
+}
+
+function omit($payload = array(), $remove = array()) {
+	$remove = !is_array($remove) ? [$remove] : $remove;
+	$_payload = cloneObject($payload);
+	foreach($remove as $value) {
+		unset($_payload[$value]);
+	}
+
+	return $_payload;
+}
 ?>

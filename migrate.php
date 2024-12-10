@@ -11,7 +11,7 @@ include('./core/database.php');
 include('./core/utils.php');
 include('./core/guard.php');
 
-$db = new Database();
+$db = new Database($config);
 $db->connect();
 
 $migration_table = $db->parse_table("migration");

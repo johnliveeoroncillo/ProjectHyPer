@@ -7,8 +7,7 @@ class Database {
 	var $error;
 	protected $config;
 
-	public function __construct() {
-		global $config;
+	public function __construct($config) {
 		$this->config = $config;
 	}
 
@@ -22,20 +21,12 @@ class Database {
 			$dbname = $this->config['DB_NAME'];
 			$username = $this->config['DB_USERNAME'];
 			$password = $this->config['DB_PASSWORD'];
-
 			$options = array(PDO::ATTR_PERSISTENT => true);
-			// // if (!IS_DEVELOP) {
-			// 	$options = array(
-			// 		// PDO::MYSQL_ATTR_SSL_KEY    => getcwd() . '/certs/client-key.pem',
-			// 		// PDO::MYSQL_ATTR_SSL_CERT=> getcwd() . '/certs/client-cert.pem',
-			// 		// PDO::MYSQL_ATTR_SSL_CA    => getcwd() . '/certs/server-ca.pem',
-			// 		PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
-			// 	);
-			// // }
 			$db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password, $options);
 			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->db = $db;
 		} catch (Exception $e) {
+			http_response_code(500);
 			throw new Error($e->getMessage());
 		}
 	}
@@ -51,7 +42,7 @@ class Database {
 		if (!empty($results)) {
 			foreach ($results as $row) {
 				$table_name = str_replace($this->config['DB_PREFIX'], '', $row['TABLE_NAME']);
-				$this->addMethod($table_name, new Repository($table_name, $this->config, $this->db));
+				$this->addMethod($table_name, new Repository($table_name, $this->config, $this));
 			}
 		}
 	}

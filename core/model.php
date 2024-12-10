@@ -17,7 +17,7 @@ class Model {
 	}
 
 	protected function initializeColumns() {
-		$result = $this->repository->query("DESC {$this->repository->parse_table($this->table)}", true, true);
+		$result = $this->repository->executeQuery("DESC {$this->table}", [], true);
 		$result = array_filter($result, function($value) {
 			return !in_array($value->Field, ['created_at', 'deleted_at', 'updated_at']);
 		});
